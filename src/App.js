@@ -3,13 +3,13 @@ import './App.css';
 import { Switch, Route } from 'react-router-dom';
 
 import HomePage from './pages/homepage/homepage.components';
+import ShopPage from './pages/shop/shop.component';
 
-
-const HatsPage = () => (
-  <div>
-    <h1>HATS PAGE</h1>
-  </div>
-)
+// const HatsPage = () => (
+//   <div>
+//     <h1>HATS PAGE</h1>
+//   </div>
+// )
 
 
     // thje Switch component does the moment that 
@@ -22,7 +22,7 @@ function App() {
     <div>
       <Switch>
       <Route exact path ='/' component ={HomePage}/>
-      <Route path ='/hats' component ={HatsPage}/>
+      <Route path ='/shop' component ={ShopPage}/>
      
       </Switch>
     </div>
