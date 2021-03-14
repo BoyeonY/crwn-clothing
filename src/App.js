@@ -6,7 +6,7 @@ import HomePage from './pages/homepage/homepage.components';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component.js';
 import signInSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.js';
-import { auth } from '../src/firebase/firebase.utils';
+import { auth, createUserProfileDocument } from '../src/firebase/firebase.utils';
 
 
 class App extends React.Component {
@@ -26,15 +26,29 @@ class App extends React.Component {
 
 
       // handle the applcation being aware of any auth changes on firebase.
-  unsubscriberFromAuth = null
+    unsubscriberFromAuth = null
 
     componentDidMount(){
 
-    
-      this.unsubscriberFromAuth = auth.onAuthStateChanged(user => {
-        this.setState({currentUser:user});
+      this.unsubscriberFromAuth = auth.onAuthStateChanged(async  userAuth => {
+        if(userAuth){
+          const userRef = await createUserProfileDocument(userAuth);
 
-        console.log(user);
+          userRef.onSnapshot(onSnapshot => {
+            this.setState({
+              currentUser:{
+                id: onSnapshot.id,
+                ...onSnapshot.data()
+              }
+
+              // colsole log can't go after set state because set state is a synchronous meaning that there is a chance that when we call it
+              //sets date is not actually finished being called.
+            },() => {console.log(this.state)})
+
+          })
+          
+        }
+        this.setState({currentUser: userAuth})
       })
     }
 
