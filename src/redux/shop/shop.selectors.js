@@ -1,21 +1,31 @@
-import {createSelector} from 'reselect';
-import memoize from 'lodash.memoize';
+import { createSelector } from 'reselect';
+
 const selectShop = state => state.shop;
 
 export const selectCollections = createSelector(
-    [selectShop],
-    shop => shop.collections
-)
-
+  [selectShop],
+  shop => shop.collections
+);
 
 export const selectCollectionsForPreview = createSelector(
+  [selectCollections],
+  collections => collections ? Object.keys(collections).map(key => collections[key]) : []
+);
+
+export const selectCollection = collectionUrlParam =>
+  createSelector(
     [selectCollections],
-    collections => Object.keys(collections).map(key => collections[key])
+    collections => (collections ? collections[collectionUrlParam] : null)
+  );
+
+
+export const selectIsCollectionFetching = createSelector(
+  [selectShop],
+  shop => shop.isFetching
 )
 
-// memoize- by wrapping this function is memoize, whenever this function gets called and receives collectionUrlParam, return of this function is being memoized.
-//if this function gets called again with the same 'collectionUrlParm' it won't be rerunned 
-export const selectCollection = (collectionUrlParam) => 
-createSelector(
-    [selectCollections],
-    collections => collections[collectionUrlParam]);
+export const selectIsCoolectionLoaded = createSelector(
+  [selectShop],
+  //!! -changing value into Boolean
+  shop => !!shop.collections
+)
